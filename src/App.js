@@ -1,6 +1,5 @@
-import logo from "./logo.svg";
 import "./App.css";
-import Hello from "./Hello";
+import InputSample from "./InputSample";
 import Wrapper from "./Wrapper";
 
 function App() {
@@ -14,10 +13,7 @@ function App() {
 
   return (
     <Wrapper>
-      <Hello name="react" color="red" isSpecial />
-      <Hello color="pink" />
-      <div style={style}>{name}</div>
-      <div className="gray-box"></div>
+      <InputSample />
     </Wrapper>
   );
 }
