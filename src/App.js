@@ -1,7 +1,6 @@
-import { useCallback, useMemo, useReducer, useRef } from "react";
+import React, { useMemo, useReducer } from "react";
 import "./App.css";
 import CreateUser from "./CreateUser";
-import useInputs from "./hooks/useInputs";
 import UserList from "./UserList";
 
 function countActiveUsers(users) {
@@ -37,7 +36,6 @@ function reducer(state, action) {
     case "CREATE_USER":
       return {
         users: state.users.concat(action.user),
-        // users: [...state.users, action.user],
       };
     case "TOGGLE_USER":
       return {
@@ -59,58 +57,21 @@ function reducer(state, action) {
   }
 }
 
+export const UserDispatch = React.createContext(null);
+
 function App() {
-  const [{ username, email }, onChange, reset] = useInputs({
-    username: "",
-    email: "",
-  });
-
   const [state, dispatch] = useReducer(reducer, initialState);
-  const nextId = useRef(4);
-
   const { users } = state;
-
-  const onCreate = useCallback(() => {
-    dispatch({
-      type: "CREATE_USER",
-      user: {
-        id: nextId.current,
-        username,
-        email,
-      },
-    });
-    reset();
-    nextId.current += 1;
-  }, [username, email, reset]);
-
-  const onRemove = useCallback((id) => {
-    dispatch({
-      type: "REMOVE_USER",
-      id,
-    });
-  }, []);
-
-  const onToggle = useCallback((id) => {
-    dispatch({
-      type: "TOGGLE_USER",
-      id,
-    });
-  }, []);
 
   const count = useMemo(() => countActiveUsers(users), [users]);
   return (
-    <>
-      <CreateUser
-        username={username}
-        email={email}
-        onChange={onChange}
-        onCreate={onCreate}
-      />
-      <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
+    <UserDispatch.Provider value={dispatch}>
+      <CreateUser />
+      <UserList users={users} />
       <div>
         <h1>Active User Number: {count}</h1>
       </div>
-    </>
+    </UserDispatch.Provider>
   );
 }
 
