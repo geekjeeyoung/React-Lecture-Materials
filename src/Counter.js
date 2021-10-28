@@ -1,37 +1,42 @@
-import React, { useReducer } from "react";
+import React, { Component } from "react";
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "INCREMENT":
-      return state + 1;
-    case "DECREMENT":
-      return state - 1;
-    default:
-      return state;
+class Counter extends Component {
+  state = {
+    counter: 0,
+    fixed: 1,
+  };
+
+  handleIncrease = () => {
+    this.setState({ counter: this.state.counter + 1 }, () => {
+      console.log("hey");
+    });
+  };
+
+  handleDecrease = () => {
+    this.setState((state) => ({
+      counter: state.counter - 1,
+    }));
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>{this.state.counter}</h1>
+        <button onClick={this.handleIncrease}>+1</button>
+        <button onClick={this.handleDecrease}>-1</button>
+        <p>Fixed Value: {this.state.fixed}</p>
+      </div>
+    );
   }
 }
 
-function Counter() {
-  const [number, dispatch] = useReducer(reducer, 0);
-
-  const onIncrease = () => {
-    dispatch({
-      type: "INCREMENT",
-    });
-  };
-  const onDecrease = () => {
-    dispatch({
-      type: "DECREMENT",
-    });
-  };
-
-  return (
-    <div>
-      <h1>{number}</h1>
-      <button onClick={onIncrease}>+1</button>
-      <button onClick={onDecrease}>-1</button>
-    </div>
-  );
-}
-
 export default Counter;
+
+/*
+getSnapshotBeforeUpdate 
+
+참고로 함수형 컴포넌트 + Hooks 를 사용 할 때에는 
+이 getSnapshotBeforeUpdate 를 대체할 수 있는 기능이 아직 없습니다. 
+DOM 에 변화가 반영되기 직전에 DOM 의 속성을 확인하고 싶을 때 
+이 생명주기 메서드를 사용하면 된다는 것을 알아두세요.
+*/
